@@ -23,6 +23,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Edgware.SR3</spring-cloud.version>
+		<commons-lang3.version>3.8.1</commons-lang3.version>
 	</properties>
 
 	<dependencies>
@@ -67,7 +68,11 @@
 			<scope>system</scope>
 			<systemPath>${basedir}/bin/zxacc-center-system-0.0.1-SNAPSHOT-domain.jar</systemPath>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

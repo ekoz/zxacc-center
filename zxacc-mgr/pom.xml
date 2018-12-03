@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.zxacc</groupId>
-	<artifactId>zxacc-app</artifactId>
+	<artifactId>zxacc-mgr</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>zxacc-app</name>
-	<description>zxacc app client</description>
+	<name>zxacc-mgr</name>
+	<description>zxacc mgr client</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
