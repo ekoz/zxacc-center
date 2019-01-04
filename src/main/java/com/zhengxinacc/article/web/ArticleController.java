@@ -39,7 +39,10 @@ public class ArticleController extends BaseController {
 
     @GetMapping("/loadHomeList")
     public Iterable<Article> loadHomeList(){
-        return articleRepository.findAll();
+        Iterable<Article> itr = articleRepository.findAll();
+        // add by eko.zhan at 2019-01-03 22:00 节省传输数据，首页速度提升
+        itr.forEach(article -> {article.setContent("");article.setContentUrl("");});
+        return itr;
     }
 
     @GetMapping("/loadHtml")
