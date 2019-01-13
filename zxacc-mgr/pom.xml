@@ -62,14 +62,14 @@
 			<artifactId>zxacc-center-system-domain</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/bin/zxacc-center-system-0.0.1-SNAPSHOT-domain.jar</systemPath>
+			<systemPath>${basedir}/lib/zxacc-center-system-0.0.1-SNAPSHOT-domain.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.zxacc</groupId>
 			<artifactId>zxacc-center-exam-domain</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/bin/zxacc-center-exam-0.0.1-SNAPSHOT-domain.jar</systemPath>
+			<systemPath>${basedir}/lib/zxacc-center-exam-0.0.1-SNAPSHOT-domain.jar</systemPath>
 		</dependency>
 
 		<dependency>

@@ -66,7 +66,7 @@
 			<artifactId>zxacc-center-domain</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
-			<systemPath>${basedir}/bin/zxacc-center-system-0.0.1-SNAPSHOT-domain.jar</systemPath>
+			<systemPath>${basedir}/lib/zxacc-center-system-0.0.1-SNAPSHOT-domain.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
