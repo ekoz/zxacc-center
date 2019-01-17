@@ -20,6 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
+        <commons-lang3.version>3.8.1</commons-lang3.version>
 	</properties>
 	
 	<dependencies>
@@ -31,6 +32,10 @@
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
 		<!-- https://mvnrepository.com/artifact/com.alibaba/fastjson -->
 		<dependency>
 		    <groupId>com.alibaba</groupId>
@@ -42,11 +47,21 @@
 		    <groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
 		</dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
+        </dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt -->
 		<dependency>
-		    <groupId>io.jsonwebtoken</groupId>
-		    <artifactId>jjwt</artifactId>
-		    <version>0.9.0</version>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.springfox/springfox-swagger2 -->
 		<dependency>
@@ -65,6 +80,15 @@
 		    <groupId>org.springframework.boot</groupId>
 		    <artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
+
+
+        <dependency>
+            <groupId>com.zxacc</groupId>
+            <artifactId>zxacc-center-system-domain</artifactId>
+            <version>0.0.1</version>
+            <scope>system</scope>
+            <systemPath>${basedir}/lib/zxacc-center-system-0.0.1-SNAPSHOT-domain.jar</systemPath>
+        </dependency>
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
