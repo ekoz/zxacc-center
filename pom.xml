@@ -35,7 +35,6 @@
 		<module>zxacc-common</module>
 		<module>zxacc-center-system</module>
 		<module>zxacc-center-exam</module>
-		<module>zxacc-auth</module>
 		<module>zxacc-zuul</module>
 		<module>zxacc-mgr</module>
 		<module>zxacc-app</module>
