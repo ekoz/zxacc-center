@@ -57,19 +57,23 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
 		<dependency>
 			<groupId>com.zxacc</groupId>
 			<artifactId>zxacc-center-system-domain</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
 			<systemPath>${basedir}/lib/zxacc-center-system-0.0.1-SNAPSHOT-domain.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>com.zxacc</groupId>
-			<artifactId>zxacc-center-exam-domain</artifactId>
-			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/lib/zxacc-center-exam-0.0.1-SNAPSHOT-domain.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -92,7 +96,7 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-	</dependencies>
+    </dependencies>
 
 	<dependencyManagement>
 		<dependencies>

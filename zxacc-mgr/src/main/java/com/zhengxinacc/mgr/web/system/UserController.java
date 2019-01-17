@@ -4,6 +4,7 @@
 package com.zhengxinacc.mgr.web.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -27,12 +28,12 @@ public class UserController extends BaseController {
 	
 	/**
 	 * 获取当前用户信息
-	 * @param user
+	 * @param authentication
 	 * @return
 	 */
 	@RequestMapping("/loadData")
-	public User loadData(@SessionAttribute("CURRENT_USER") User user){
-		return user;
+	public User loadData(Authentication authentication){
+		return (User)authentication.getPrincipal();
 	}
 	
 	@RequestMapping("/loadList")

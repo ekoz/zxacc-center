@@ -1,14 +1,15 @@
 /*
  * Power by www.xiaoi.com
  */
-package com.zhengxinacc.mgr.config;
+package com.zhengxinacc.mgr.security;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.zhengxinacc.common.security.TokenAuthenticationService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,13 +18,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zhengxinacc.mgr.remote.UserClient;
-import com.zhengxinacc.system.domain.Role;
 import com.zhengxinacc.system.domain.User;
 
 /**
@@ -32,15 +31,19 @@ import com.zhengxinacc.system.domain.User;
  * @version 1.0
  */
 @Component
+@Slf4j
 public class MyAuthenticationProvider implements AuthenticationProvider {
 
 	@Resource
 	private UserClient userClient;
+	@Resource
+    TokenAuthenticationService tokenAuthenticationService;
 	
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		String username = authentication.getName();
-        String password = (String) authentication.getCredentials(); //用户登录输入的密码（明文传输）
+        //用户登录输入的密码（明文传输）
+        String password = (String) authentication.getCredentials();
         JSONObject json = null;
 		try {
 			json = userClient.verify(username, password);
@@ -51,14 +54,16 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
 		if (json==null || StringUtils.isBlank(json.getString("id"))){
 			throw new BadCredentialsException("用户名或密码错误");
 		}
-		UserDetails userDetails = JSON.toJavaObject(json, UserDetails.class);
+        User user = JSON.toJavaObject(json, User.class);
 		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
 		json.getJSONArray("authorities").forEach(item -> {
 			String key = JSON.parseObject(item.toString()).getString("authority");
 			auths.add(new SimpleGrantedAuthority(key));
-		}); 
-		
-        return new UsernamePasswordAuthenticationToken(userDetails, password, auths);
+		});
+
+		String token = tokenAuthenticationService.generateToken(user, "zxacc");
+		log.debug(user.getUsername() + "'s token is? " + token);
+		return new UsernamePasswordAuthenticationToken(user, password, auths);
 	}
 
 	@Override

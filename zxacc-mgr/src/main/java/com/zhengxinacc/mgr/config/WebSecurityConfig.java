@@ -3,12 +3,19 @@
  */
 package com.zhengxinacc.mgr.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.zhengxinacc.common.security.AuthenticationTokenFilter;
+import com.zhengxinacc.mgr.security.MyAccessDeniedHandler;
+import com.zhengxinacc.mgr.security.MyAuthenticationProvider;
+import com.zhengxinacc.mgr.security.MyAuthenticationSuccessHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.annotation.Resource;
 
 /**
  * @author <a href="mailto:eko.z@outlook.com">eko.zhan</a>
@@ -18,11 +25,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-    private MyAuthenticationProvider provider;
-	@Autowired
+	@Resource
+	private MyAuthenticationProvider provider;
+	@Resource
 	private MyAuthenticationSuccessHandler successHandler;
-	@Autowired
+	@Resource
 	private MyAccessDeniedHandler accessDeniedHandler;
 	
 	/**
@@ -42,10 +49,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.and()
 			.formLogin()
 				.loginPage("/login")
-				.defaultSuccessUrl("/main", true) //默认进入main，注意，设置为true后不会进入上一个页面了，具体在  successHandler 中根据条件跳转
+				//默认进入main，注意，设置为true后不会进入上一个页面了，具体在  successHandler 中根据条件跳转
+				.defaultSuccessUrl("/main", true)
 				.failureUrl("/login?error")
 				.permitAll()
-				.successHandler(successHandler) //登录页面用户任意访问
+                //登录页面用户任意访问
+				.successHandler(successHandler)
 			.and()
 			.logout()
 				.permitAll() //注销行为任意访问
@@ -59,7 +68,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		//X-Frame-Options default is deny
 		//https://docs.spring.io/spring-security/site/docs/current/reference/html/headers.html#headers-frame-options
 		http.headers().frameOptions().sameOrigin();
-		
+
+		http.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 		super.configure(http);
 	}
 	
@@ -81,4 +91,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		web.ignoring().antMatchers("/css/**", "/js/**", "/DATAS/**", "/plugins/**");
 		super.configure(web);
 	}
+
+    @Bean
+    public AuthenticationTokenFilter authenticationTokenFilterBean() {
+        return new AuthenticationTokenFilter();
+    }
+
 }

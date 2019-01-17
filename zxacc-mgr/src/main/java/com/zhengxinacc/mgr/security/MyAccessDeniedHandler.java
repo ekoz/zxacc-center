@@ -1,7 +1,7 @@
 /*
  * Power by www.xiaoi.com
  */
-package com.zhengxinacc.mgr.config;
+package com.zhengxinacc.mgr.security;
 
 import java.io.IOException;
 
