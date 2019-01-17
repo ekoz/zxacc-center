@@ -3,6 +3,7 @@
  */
 package com.zhengxinacc.system.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.Getter;

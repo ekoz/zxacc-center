@@ -78,8 +78,7 @@ public class UserController extends BaseController {
 	/**
 	 * 保存用户
 	 * @author eko.zhan at 2017年12月23日 下午7:01:05
-	 * @param principal
-	 * @param request
+	 * @param user
 	 * @return
 	 */
 	@PostMapping("/save")
@@ -158,6 +157,6 @@ public class UserController extends BaseController {
 		if (!EncryptUtils.verify(password, user.getPassword(), user.getSalt())) {
 		    throw new BadCredentialsException("用户名或密码错误");
 		}
-		return (JSONObject)JSON.toJSON(userDetails);
+		return (JSONObject)JSON.toJSON(user);
 	}
 }
