@@ -15,5 +15,5 @@
 * 学员考试
 
 ### 界面预览
-<img src="zxacc-center/src/main/resources/static/DATAS/demo-scan.jpg" width="300px" /> <img src="zxacc-center/src/main/resources/static/DATAS/demo-login.jpg" width="300px" />
-<img src="zxacc-center/src/main/resources/static/DATAS/demo-list.jpg" width="300px" /> <img src="zxacc-center/src/main/resources/static/DATAS/demo-task.jpg" width="300px" />
+<img src="docs/demo-scan.jpg" width="300px" /> <img src="docs/demo-login.jpg" width="300px" />
+<img src="docs/demo-list.jpg" width="300px" /> <img src="docs/demo-task.jpg" width="300px" />
