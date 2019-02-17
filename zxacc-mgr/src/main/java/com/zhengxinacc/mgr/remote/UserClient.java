@@ -9,6 +9,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.alibaba.fastjson.JSONObject;
 import com.zhengxinacc.system.domain.User;
 
+/**
+ * @author <a href="mailto:eko.z@outlook.com">eko.zhan</a>
+ * @date 2018年7月28日 下午1:44:16
+ * @version 1.0
+ */
 @FeignClient(name="zxacc-zuul")
 public interface UserClient {
 	

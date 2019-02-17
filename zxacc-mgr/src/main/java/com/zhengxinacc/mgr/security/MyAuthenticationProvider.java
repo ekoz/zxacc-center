@@ -9,6 +9,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import com.zhengxinacc.common.security.TokenAuthenticationService;
+import com.zhengxinacc.mgr.remote.UserLoginClient;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -35,7 +36,7 @@ import com.zhengxinacc.system.domain.User;
 public class MyAuthenticationProvider implements AuthenticationProvider {
 
 	@Resource
-	private UserClient userClient;
+	private UserLoginClient userLoginClient;
 	@Resource
     TokenAuthenticationService tokenAuthenticationService;
 	
@@ -46,7 +47,7 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
         String password = (String) authentication.getCredentials();
         JSONObject json = null;
 		try {
-			json = userClient.verify(username, password);
+			json = userLoginClient.verify(username, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new BadCredentialsException("用户名或密码错误");
