@@ -2,17 +2,19 @@ package com.zhengxinacc.system;
 
 import java.util.Arrays;
 
+import com.zhengxinacc.common.security.AuthenticationTokenFilter;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.zhengxinacc.system", "com.zhengxinacc.common.security", "com.zhengxinacc.common.redis"})
 @EnableEurekaClient
 @EnableScheduling
 @Slf4j
@@ -35,4 +37,5 @@ public class ZxaccCenterSystemApplication {
             }
         };
     }
+
 }
