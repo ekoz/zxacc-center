@@ -10,6 +10,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -30,14 +32,20 @@ public class TokenAuthenticationService {
 
     public static final String TOKEN_TYPE_BEARER = "Bearer";
 
+    @Getter
+    @Setter
     private String header = "Authorization";
-
+    @Getter
+    @Setter
     private String secret = "defaultSecret";
-
+    @Getter
+    @Setter
     private Long expiration = 604800L;
-
+    @Getter
+    @Setter
     private String authPath = "auth";
-
+    @Getter
+    @Setter
     private String md5Key = "randomKey";
 
     @Autowired
@@ -184,45 +192,7 @@ public class TokenAuthenticationService {
         return JSON.toJavaObject(JSON.parseObject(user), User.class);
     };
 
-    public String getHeader() {
-        return header;
-    }
 
-    public void setHeader(String header) {
-        this.header = header;
-    }
-
-    public String getSecret() {
-        return secret;
-    }
-
-    public void setSecret(String secret) {
-        this.secret = secret;
-    }
-
-    public Long getExpiration() {
-        return expiration;
-    }
-
-    public void setExpiration(Long expiration) {
-        this.expiration = expiration;
-    }
-
-    public String getAuthPath() {
-        return authPath;
-    }
-
-    public void setAuthPath(String authPath) {
-        this.authPath = authPath;
-    }
-
-    public String getMd5Key() {
-        return md5Key;
-    }
-
-    public void setMd5Key(String md5Key) {
-        this.md5Key = md5Key;
-    }
 
     public static String getTokenTypeBearer() {
         return TOKEN_TYPE_BEARER;

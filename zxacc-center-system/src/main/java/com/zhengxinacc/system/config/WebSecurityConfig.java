@@ -26,6 +26,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		//http://blog.csdn.net/u012373815/article/details/55047285
+        http.authorizeRequests()
+                .antMatchers("/user/verify").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .permitAll();
 		http.csrf().disable()
 				.addFilterBefore(new AuthLoginFilter("/login", authenticationManager()), UsernamePasswordAuthenticationFilter.class)
 				.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);

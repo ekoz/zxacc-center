@@ -4,8 +4,11 @@
 package com.zhengxinacc.common.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -53,6 +56,9 @@ public class AuthLoginFilter extends AbstractAuthenticationProcessingFilter {
         log.debug(String.valueOf(list.size()));
         list.forEach(s -> log.debug(s));
         log.debug("===================================");
+        if (StringUtils.isBlank(authorization)){
+            return null;
+        }
         AccountCredentials creds = new ObjectMapper().readValue(request.getInputStream(), AccountCredentials.class);
 
         // 返回一个验证令牌
@@ -66,24 +72,9 @@ public class AuthLoginFilter extends AbstractAuthenticationProcessingFilter {
     }
 }
 
+@Getter
+@Setter
 class AccountCredentials {
-
     private String username;
     private String password;
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 }

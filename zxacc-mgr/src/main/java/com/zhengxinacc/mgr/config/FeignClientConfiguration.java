@@ -11,9 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -32,7 +34,15 @@ public class FeignClientConfiguration implements RequestInterceptor {
     public void apply(RequestTemplate template) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         log.debug(request.getHeader(HttpHeaders.AUTHORIZATION));
-//        template.header(HttpHeaders.AUTHORIZATION, request.getHeader(HttpHeaders.AUTHORIZATION));
-        template.header(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyYW5kb21LZXkiOiJ6eGFjYyIsInN1YiI6ImVrb3poYW4iLCJleHAiOjE1NTA5OTE4ODEsImlhdCI6MTU1MDM4NzA4MX0.1ysBoP5dHR0HMAW9V92AK57-iXBeYkEiszxpYNoqu21gNODYj_LZ6AXt9erlBUyxL2ZSMurIou5ILdCidXOQ2g");
+        String token = "";
+        for (Cookie cookie : request.getCookies()){
+            if ("token".equals(cookie.getName())){
+                token = cookie.getValue();
+                break;
+            }
+        }
+        log.debug("token is ? " + new String(new String(Base64Utils.decode(token.getBytes()))));
+        template.header(HttpHeaders.AUTHORIZATION, new String(new String(Base64Utils.decode(token.getBytes()))));
+//        template.header(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyYW5kb21LZXkiOiJ6eGFjYyIsInN1YiI6ImVrb3poYW4iLCJleHAiOjE1NTA5OTE4ODEsImlhdCI6MTU1MDM4NzA4MX0.1ysBoP5dHR0HMAW9V92AK57-iXBeYkEiszxpYNoqu21gNODYj_LZ6AXt9erlBUyxL2ZSMurIou5ILdCidXOQ2g");
     }
 }
