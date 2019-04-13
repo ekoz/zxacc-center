@@ -4,6 +4,7 @@
 package com.zhengxinacc.mgr.security;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.alibaba.fastjson.JSONObject;
 import com.netflix.discovery.converters.Auto;
 import com.zhengxinacc.common.redis.RedisRepository;
 import com.zhengxinacc.common.security.TokenAuthenticationService;
@@ -52,12 +54,20 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
         String token = TokenAuthenticationService.TOKEN_TYPE_BEARER + " " + redisRepository.get("user_auth_token_" + username);
 //        response.setHeader(HttpHeaders.AUTHORIZATION, token);
 
-        response.addCookie(new Cookie("token", new String(Base64Utils.encode(token.getBytes()))));
+//        response.addCookie(new Cookie("token", new String(Base64Utils.encode(token.getBytes()))));
 		User user = userClient.findByUsername(username);
 		log.debug(user.toString());
 		LogUtils.infoLogin(user, LogUtils.getRemoteIp(request));
 
-		super.onAuthenticationSuccess(request, response, authentication);
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/plain");
+		PrintWriter out = response.getWriter();
+		JSONObject json = new JSONObject();
+		json.put("type", 1);
+		json.put("token", new String(Base64Utils.encode(token.getBytes())));
+		out.println(json.toString());
+
+//		super.onAuthenticationSuccess(request, response, authentication);
 		
 	}
 }

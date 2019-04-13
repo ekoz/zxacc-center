@@ -5,6 +5,7 @@ package com.zhengxinacc.mgr.config;
 
 import com.zhengxinacc.common.security.AuthenticationTokenFilter;
 import com.zhengxinacc.mgr.security.MyAccessDeniedHandler;
+import com.zhengxinacc.mgr.security.MyAuthenticationFailureHandler;
 import com.zhengxinacc.mgr.security.MyAuthenticationProvider;
 import com.zhengxinacc.mgr.security.MyAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private MyAuthenticationProvider provider;
 	@Resource
 	private MyAuthenticationSuccessHandler successHandler;
+	@Resource
+	private MyAuthenticationFailureHandler failureHandler;
 	@Resource
 	private MyAccessDeniedHandler accessDeniedHandler;
 	
@@ -55,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
                 //登录页面用户任意访问
 				.successHandler(successHandler)
+				.failureHandler(failureHandler)
 			.and()
 			.logout()
 				.permitAll() //注销行为任意访问
