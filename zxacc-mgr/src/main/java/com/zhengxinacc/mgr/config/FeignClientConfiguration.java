@@ -3,6 +3,7 @@
  */
 package com.zhengxinacc.mgr.config;
 
+import com.zhengxinacc.common.util.EncryptUtils;
 import feign.Contract;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -33,16 +34,10 @@ public class FeignClientConfiguration implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        log.debug(request.getHeader(HttpHeaders.AUTHORIZATION));
-        String token = "";
-        for (Cookie cookie : request.getCookies()){
-            if ("token".equals(cookie.getName())){
-                token = cookie.getValue();
-                break;
-            }
-        }
-        log.debug("token is ? " + new String(new String(Base64Utils.decode(token.getBytes()))));
-        template.header(HttpHeaders.AUTHORIZATION, new String(new String(Base64Utils.decode(token.getBytes()))));
-//        template.header(HttpHeaders.AUTHORIZATION, "Bearer eyJhbGciOiJIUzUxMiJ9.eyJyYW5kb21LZXkiOiJ6eGFjYyIsInN1YiI6ImVrb3poYW4iLCJleHAiOjE1NTA5OTE4ODEsImlhdCI6MTU1MDM4NzA4MX0.1ysBoP5dHR0HMAW9V92AK57-iXBeYkEiszxpYNoqu21gNODYj_LZ6AXt9erlBUyxL2ZSMurIou5ILdCidXOQ2g");
+
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+//        log.debug("token is {}", token);
+//        log.debug("token is {} ", EncryptUtils.decodeBase64(token));
+        template.header(HttpHeaders.AUTHORIZATION, EncryptUtils.decodeBase64(token));
     }
 }

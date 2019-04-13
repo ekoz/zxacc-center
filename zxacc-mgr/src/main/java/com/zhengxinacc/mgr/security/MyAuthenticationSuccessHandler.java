@@ -8,23 +8,20 @@ import java.io.PrintWriter;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSONObject;
-import com.netflix.discovery.converters.Auto;
 import com.zhengxinacc.common.redis.RedisRepository;
 import com.zhengxinacc.common.security.TokenAuthenticationService;
+import com.zhengxinacc.common.util.EncryptUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.zhengxinacc.common.util.SystemKeys;
 import com.zhengxinacc.mgr.remote.UserClient;
 import com.zhengxinacc.mgr.util.LogUtils;
 import com.zhengxinacc.system.domain.User;
@@ -52,22 +49,19 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
 		String username = authentication.getName();
         // 登陆成功后，将 user_auth_token_*** 存放在 HttpHeaders.AUTHORIZATION 中
         String token = TokenAuthenticationService.TOKEN_TYPE_BEARER + " " + redisRepository.get("user_auth_token_" + username);
-//        response.setHeader(HttpHeaders.AUTHORIZATION, token);
 
-//        response.addCookie(new Cookie("token", new String(Base64Utils.encode(token.getBytes()))));
+        // 记录登陆日志
 		User user = userClient.findByUsername(username);
 		log.debug(user.toString());
 		LogUtils.infoLogin(user, LogUtils.getRemoteIp(request));
 
+		// 返回登陆成功信号
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/plain");
 		PrintWriter out = response.getWriter();
 		JSONObject json = new JSONObject();
 		json.put("type", 1);
-		json.put("token", new String(Base64Utils.encode(token.getBytes())));
+		json.put("token", EncryptUtils.encodeBase64(token));
 		out.println(json.toString());
-
-//		super.onAuthenticationSuccess(request, response, authentication);
-		
 	}
 }

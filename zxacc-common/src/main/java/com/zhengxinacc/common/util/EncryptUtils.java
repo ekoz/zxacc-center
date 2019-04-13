@@ -4,6 +4,7 @@
 package com.zhengxinacc.common.util;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.util.Base64Utils;
 
 
 /**
@@ -22,8 +23,8 @@ public class EncryptUtils {
 	 */
 	public static String encode(String password, String salt){
 		String origin = password + "&" + salt;
-		String md5Hex = DigestUtils.md5Hex(origin); //获得密文
-		return md5Hex;
+        // 获得密文
+		return DigestUtils.md5Hex(origin);
 	}
 	/**
 	 * 验证用户密码准确性
@@ -32,7 +33,6 @@ public class EncryptUtils {
 	 * @param target 数据库中存储的密码，密文，不可逆
 	 * @param salt 数据库中存储的盐值，密文，可逆
 	 * @return
-	 * @throws Base64DecodingException 
 	 */
 	public static Boolean verify(String input, String target, String salt){
 		salt = new String(Base64.decodeBase64(salt));
@@ -42,5 +42,27 @@ public class EncryptUtils {
 		}
 		return false;
 	}
+
+	/**
+	 * 针对明文进行 base64 可逆加密
+	 * @author eko.zhan
+	 * @date 2019/4/13 17:15
+	 * @param token
+	 * @return java.lang.String
+	 */
+	public static String encodeBase64(String token) {
+		return new String(Base64Utils.encode(token.getBytes()));
+	}
+	/**
+	 * 针对密文进行 base64 解密
+	 * @author eko.zhan
+	 * @date 2019/4/13 17:17
+	 * @param raw
+	 * @return java.lang.String
+	 */
+	public static String decodeBase64(String raw) {
+        return new String(Base64Utils.decode(raw.getBytes()));
+	}
+
 }
 

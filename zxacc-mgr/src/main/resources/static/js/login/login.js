@@ -20,6 +20,7 @@ layui.use('layer', function() { //独立版的layer无需执行这一句
             password: $('input[name="password"]').val()
         }, function(data){
             if (data.type==1){
+                localStorage.token = data.token;
                 location.href = 'main';
             }else{
                 layer.msg('账号和密码不正确，请重新输入');

@@ -56,14 +56,14 @@ public class MyAuthenticationProvider implements AuthenticationProvider {
 			throw new BadCredentialsException("用户名或密码错误");
 		}
         User user = JSON.toJavaObject(json, User.class);
-		List<GrantedAuthority> auths = new ArrayList<GrantedAuthority>();
+		List<GrantedAuthority> auths = new ArrayList<>();
 		json.getJSONArray("authorities").forEach(item -> {
 			String key = JSON.parseObject(item.toString()).getString("authority");
 			auths.add(new SimpleGrantedAuthority(key));
 		});
 
 		String token = tokenAuthenticationService.generateToken(user, "zxacc");
-		log.debug(user.getUsername() + "'s token is? " + token);
+		log.debug("{}'s token is? {}", user.getUsername(), token);
 		return new UsernamePasswordAuthenticationToken(user, password, auths);
 	}
 

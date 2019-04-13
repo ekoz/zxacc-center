@@ -26,6 +26,13 @@
 	    		/* 应用根路径，如 /kbaseui-std */
 	            ctx: $('meta[name="ctx"]').attr('content')
 	    	});
+
+
+            $.ajaxSetup({
+				headers: {
+				    'Authorization': localStorage.getItem('token')
+				}
+			});
 	    })(jQuery);
     </script>
 </head>
