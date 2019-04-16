@@ -2,7 +2,9 @@ package com.zhengxinacc.mgr.remote;
 
 import com.alibaba.fastjson.JSONObject;
 import com.zhengxinacc.mgr.config.FeignClientConfiguration;
+import com.zhengxinacc.system.domain.User;
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +24,22 @@ public interface UserLoginClient {
 	 */
 	@RequestMapping(value="/api-system/user/verify", method=RequestMethod.POST)
 	JSONObject verify(@RequestParam("username") String username, @RequestParam("password") String password);
+
+    /**
+     * https://segmentfault.com/a/1190000018313243
+     * https://github.com/OpenFeign/feign#headers
+     * https://stackoverflow.com/questions/50237709/how-to-send-bearer-authorization-token-using-spring-boot-and-feignclient
+     * https://blog.arnoldgalovics.com/passing-headers-with-spring-cloud-feign/
+     * 根据用户名获取用户信息
+     * @param username
+     * @param token
+     * @return
+     */
+    @RequestMapping(value="/api-system/user/findByUsername", method=RequestMethod.POST)
+//    TODO 用 @Headers 无法登陆
+//    @Headers("Authorization: {token}")
+//    User findByUsername(@RequestParam("username") String username, @Param("token") String token);
+    User findByUsername(@RequestParam("username") String username, @RequestHeader("Authorization") String token);
 
 	/**
 	 * 获取用户列表
@@ -44,5 +62,10 @@ class UserLoginClientFallback implements UserLoginClient {
     @Override
     public JSONObject loadList(Integer page, Integer limit, String keyword) {
         return new JSONObject();
+    }
+
+    @Override
+    public User findByUsername(String username, String token){
+        return null;
     }
 }

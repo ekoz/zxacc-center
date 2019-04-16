@@ -9,6 +9,7 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import feign.auth.BasicAuthRequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 @Configuration
 @Slf4j
 public class FeignClientConfiguration implements RequestInterceptor {
+    private static final String NULL_STRING = "null";
 
     @Override
     public void apply(RequestTemplate template) {
@@ -38,6 +40,8 @@ public class FeignClientConfiguration implements RequestInterceptor {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
 //        log.debug("token is {}", token);
 //        log.debug("token is {} ", EncryptUtils.decodeBase64(token));
-        template.header(HttpHeaders.AUTHORIZATION, EncryptUtils.decodeBase64(token));
+        if (StringUtils.isNotBlank(token) && !NULL_STRING.equals(token)){
+            template.header(HttpHeaders.AUTHORIZATION, EncryptUtils.decodeBase64(token));
+        }
     }
 }

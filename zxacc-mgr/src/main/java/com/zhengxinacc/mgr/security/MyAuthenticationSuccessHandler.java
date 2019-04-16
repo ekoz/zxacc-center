@@ -15,6 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.zhengxinacc.common.redis.RedisRepository;
 import com.zhengxinacc.common.security.TokenAuthenticationService;
 import com.zhengxinacc.common.util.EncryptUtils;
+import com.zhengxinacc.mgr.remote.UserLoginClient;
+import feign.Feign;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,7 @@ import org.springframework.util.Base64Utils;
 public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler  {
 
 	@Autowired
-	UserClient userClient;
+    UserLoginClient userLoginClient;
 	@Resource
     RedisRepository redisRepository;
 	
@@ -50,10 +52,13 @@ public class MyAuthenticationSuccessHandler extends SavedRequestAwareAuthenticat
         // 登陆成功后，将 user_auth_token_*** 存放在 HttpHeaders.AUTHORIZATION 中
         String token = TokenAuthenticationService.TOKEN_TYPE_BEARER + " " + redisRepository.get("user_auth_token_" + username);
 
+        log.debug("===============================");
+        log.debug(token);
+        log.debug("===============================");
         // 记录登陆日志
-		User user = userClient.findByUsername(username);
-		log.debug(user.toString());
-		LogUtils.infoLogin(user, LogUtils.getRemoteIp(request));
+		User user = userLoginClient.findByUsername(username, token);
+        log.debug(user.toString());
+        LogUtils.infoLogin(user, LogUtils.getRemoteIp(request));
 
 		// 返回登陆成功信号
 		response.setCharacterEncoding("utf-8");
