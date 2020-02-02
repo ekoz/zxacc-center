@@ -5,7 +5,10 @@ package com.zhengxinacc.exam.paper.web;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +89,16 @@ public class PaperController extends BaseController {
 //			tmp.put("gradeName", grades);
 //			dataArr.add(tmp);
 //		}
-		
+        // 过滤不必要的数据
+		list = list.stream().peek(paper->{
+		   paper.setQuestionList(null);
+		   paper.setGrades(paper.getGrades()
+                   .stream()
+                   .peek(grade -> grade.setUsers(null))
+                   .collect(Collectors.toList()));
+		   paper.setQuestions(null);
+        }).collect(Collectors.toList());
+
 		result.put("data", list);
 		
 		return result;
@@ -193,6 +205,13 @@ public class PaperController extends BaseController {
      */
     @GetMapping(value = "/exportTask", produces = "application/vnd.ms-excel;charset=UTF-8")
     public ResponseEntity<byte[]> export(String paperId){
+        String paperName = paperRepository.findOne(paperId).getName();
+        String fileName = System.currentTimeMillis() + ".xlsx";
+        try {
+            fileName = URLEncoder.encode(paperName + "_" + System.currentTimeMillis() + ".xlsx", "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         XSSFWorkbook workbook = paperService.exportTask(paperId);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         try {
@@ -201,7 +220,7 @@ public class PaperController extends BaseController {
             e.printStackTrace();
         }
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentDispositionFormData("attachment", System.currentTimeMillis() + ".xlsx");
+        headers.setContentDispositionFormData("attachment", fileName);
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
         byte[] outputStreamByte = out.toByteArray();
         ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(outputStreamByte, headers, HttpStatus.OK);

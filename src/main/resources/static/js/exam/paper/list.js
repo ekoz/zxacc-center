@@ -344,7 +344,7 @@ $('#btnView').click(function(){
 					});
 				},
 				btn2: function (index, layero) {
-					window.open($.kbase.ctx + '/exam/paper/exportTask?paperId=' + row.id);
+					window.open($.kbase.ctx + '/exam/paper/exportTask?paperId=' + row.id, '_self');
                 }
 			});
 		}
