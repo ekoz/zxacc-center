@@ -3,24 +3,28 @@
  */
 package com.zhengxinacc.exam.paper.web;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang3.time.DateFormatUtils;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.zhengxinacc.config.BaseController;
-import com.zhengxinacc.exam.grade.domain.Grade;
 import com.zhengxinacc.exam.grade.repository.GradeRepository;
 import com.zhengxinacc.exam.paper.domain.Paper;
 import com.zhengxinacc.exam.paper.repository.PaperRepository;
@@ -103,7 +107,6 @@ public class PaperController extends BaseController {
 	/**
 	 * 保存试卷信息
 	 * @author eko.zhan at 2017年12月23日 下午7:01:05
-	 * @param principal
 	 * @param request
 	 * @return
 	 */
@@ -183,6 +186,32 @@ public class PaperController extends BaseController {
 		result.put("data", list);
 		return result;
 	}
+
+    /**
+     * 导出考试结果
+     * @param paperId
+     */
+    @GetMapping(value = "/exportTask", produces = "application/vnd.ms-excel;charset=UTF-8")
+    public ResponseEntity<byte[]> export(String paperId){
+        XSSFWorkbook workbook = paperService.exportTask(paperId);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try {
+            workbook.write(out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentDispositionFormData("attachment", System.currentTimeMillis() + ".xlsx");
+        headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+        byte[] outputStreamByte = out.toByteArray();
+        ResponseEntity<byte[]> responseEntity = new ResponseEntity<>(outputStreamByte, headers, HttpStatus.OK);
+        try {
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return responseEntity;
+    }
 	
 	@RequestMapping("/copy")
 	public JSONObject copy(String id){

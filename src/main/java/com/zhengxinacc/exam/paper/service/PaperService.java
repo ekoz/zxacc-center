@@ -5,6 +5,7 @@ package com.zhengxinacc.exam.paper.service;
 
 import java.util.List;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
 
@@ -56,4 +57,10 @@ public interface PaperService {
 	 * @param id
 	 */
 	public void copy(String id);
+
+	/**
+	 * 导出考试结果成excel
+	 * @param paperId
+	 */
+    XSSFWorkbook exportTask(String paperId);
 }

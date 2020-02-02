@@ -332,7 +332,7 @@ $('#btnView').click(function(){
 			});
 			layer.open({
 				type: 1,
-				btn: ['分析', '关闭'],
+				btn: ['分析', '导出', '关闭'],
 				area: ['720px', '380px'],
 				content: $('.layui-table-view:eq(1)'),
 				yes: function(index, layero){
@@ -342,7 +342,10 @@ $('#btnView').click(function(){
 						url: $.kbase.ctx + '/exam/analysis/view?paperId=' + row.id,
 						title: '考试结果分析'
 					});
-				}
+				},
+				btn2: function (index, layero) {
+					window.open($.kbase.ctx + '/exam/paper/exportTask?paperId=' + row.id);
+                }
 			});
 		}
 	});

@@ -14,10 +14,13 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.zhengxinacc.exam.task.domain.Task;
+import com.zhengxinacc.exam.task.repository.TaskRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -61,6 +64,8 @@ public class PaperServiceImpl implements PaperService {
 	private QuestionRepository questionRepository;
 	@Resource
 	private MongoTemplate mongoTemplate;
+	@Resource
+    private TaskRepository taskRepository;
 	
 	@Override
 	public Paper save(JSONObject data) {
@@ -171,5 +176,30 @@ public class PaperServiceImpl implements PaperService {
 		 * 3、复制题目
 		 */
 		Paper oPaper = paperRepository.findOne(id);
+	}
+
+	@Override
+	public XSSFWorkbook exportTask(String paperId) {
+		Paper paper = paperRepository.findOne(paperId);
+		List<Task> list = taskRepository.findByPaper(paper, 1);
+
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Sheet1");
+        XSSFRow row = sheet.createRow(0);
+        row.createCell(0).setCellValue("姓名");
+        row.createCell(1).setCellValue("成绩");
+        row.createCell(2).setCellValue("状态");
+
+        int i=1;
+        for (Task task : list){
+            row = sheet.createRow(i);
+            row.createCell(0).setCellValue(task.getCreateUser());
+            row.createCell(1).setCellValue(task.getScore()==null?0.0:task.getScore());
+            row.createCell(2).setCellValue(task.getStatus()==1?"已完成":"考试中");
+            i++;
+        }
+
+        return workbook;
 	}
 }
