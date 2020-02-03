@@ -35,8 +35,14 @@ public class Question extends BaseBean {
 	private QuestionCate cate;
 	@DBRef
 	private List<Answer> answers;
-	//判断题时记录正确答案
-	private Boolean key; //true-正确 false-错误
+	/**
+	 * 判断题时记录正确答案
+	 * true-正确 false-错误
+	 */
+	private Boolean key;
 	//题目类型
+	/**
+	 * 0-单选题 1-多选题 2-判断题
+ 	 */
 	private Integer type;
 }

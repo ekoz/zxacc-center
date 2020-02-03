@@ -4,6 +4,7 @@
 package com.zhengxinacc.exam.paper.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 /**
@@ -14,8 +15,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class PaperQuestion {
-	private String id;	//对应问题主键id
+	/**
+	 * 对应问题主键id
+	 */
+	private String id;
 	private String name;
 	private Integer type;
 	private Integer order = 0;

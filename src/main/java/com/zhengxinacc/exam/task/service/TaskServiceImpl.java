@@ -55,7 +55,9 @@ public class TaskServiceImpl implements TaskService {
 		Task task = taskRepository.findByPaperAndCreateUser(paper, username);
 		
 		//如果已经答卷完毕，则无法修改
-		if (task.getStatus()==1) return task;
+		if (task.getStatus()==1){
+		    return task;
+        }
 		
 		task.setModifyDate(new Date());
 		task.setLimit(limit);
@@ -115,9 +117,17 @@ public class TaskServiceImpl implements TaskService {
 			paper.getQuestions().forEach((id, paperQuestion) -> {
 			    Question question = questionRepository.findOne(id);
 			    TaskQuestion taskQuestion
-			    	= new TaskQuestion(question.getId(), question.getName(), question.getType(),
-			    			paperQuestion.getOrder(), paperQuestion.getScore(), question.getKey(),
-			    			Boolean.FALSE, Boolean.FALSE, question.getAnswers());
+                        = TaskQuestion.builder()
+                        .id(question.getId())
+                        .name(question.getName())
+                        .type(question.getType())
+                        .order(paperQuestion.getOrder())
+                        .score(paperQuestion.getScore())
+                        .key(question.getKey())
+                        .answers(question.getAnswers())
+                        .keyMark(Boolean.FALSE)
+                        .isReply(Boolean.FALSE)
+                        .build();
 			    taskQuestions.put(question.getId(), taskQuestion);
 			});
 			task.setQuestions(taskQuestions);
@@ -132,7 +142,9 @@ public class TaskServiceImpl implements TaskService {
 		Task task = taskRepository.findByPaperAndCreateUser(paper, username);
 		
 		//如果已经答卷完毕，则无法修改
-		if (task.getStatus()==1) return task;
+		if (task.getStatus()==1){
+		    return task;
+        }
 		
 		task.setStatus(1); //答卷完毕
 		task.setModifyDate(new Date());
@@ -143,8 +155,9 @@ public class TaskServiceImpl implements TaskService {
 			if (taskQuestion.getType()==0){
 				//单选题
 				taskQuestion.getAnswers().forEach(answer -> {
-					if (answer.getKey() && answer.getKey()==answer.getMark()){
+					if (answer.getKey() && answer.getKey().equals(answer.getMark())){
 						scoreList.add(taskQuestion.getScore());
+						taskQuestion.setFinalTof(Boolean.TRUE);
 						return;
 					}
 				});
@@ -154,19 +167,21 @@ public class TaskServiceImpl implements TaskService {
 				Iterator<Answer> iterator = taskQuestion.getAnswers().iterator();
 				while (iterator.hasNext()){
 					Answer answer = iterator.next();
-					if (answer.getKey() && answer.getKey()!=answer.getMark()){
+					if (answer.getKey() && answer.getKey().equals(answer.getMark())){
 						b = false;
-					}else if (!answer.getKey() && answer.getKey()!=answer.getMark()){
+					}else if (!answer.getKey() && answer.getKey().equals(answer.getMark())){
 						b = false;
 					}
 				}
 				if (b){
 					scoreList.add(taskQuestion.getScore());
+					taskQuestion.setFinalTof(Boolean.TRUE);
 				}
 			}else if (taskQuestion.getType()==2){
 				//判断题
-				if (taskQuestion.getKey()==taskQuestion.getKeyMark()){
+				if (taskQuestion.getKey().equals(taskQuestion.getKeyMark())){
 					scoreList.add(taskQuestion.getScore());
+					taskQuestion.setFinalTof(Boolean.TRUE);
 				}
 			}
 		});

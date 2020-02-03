@@ -5,10 +5,7 @@ package com.zhengxinacc.exam.task.domain;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import com.zhengxinacc.exam.question.domain.Answer;
 
@@ -21,15 +18,39 @@ import com.zhengxinacc.exam.question.domain.Answer;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class TaskQuestion {
 
-	private String id;	//对应问题主键id
+	/**
+	 * 对应问题主键id
+	 */
+	private String id;
 	private String name;
 	private Integer type;
 	private Integer order = 0;
 	private Double score;
-	private Boolean key; //记录判断题正确答案
-	private Boolean keyMark = Boolean.FALSE; //记录判断题答题答案 
-	private Boolean isReply = Boolean.TRUE; //标识当前是答卷中的问题
-	private List<Answer> answers;	//根据是否有  question 对象，判断是否答题
+    /**
+     * 最终得分
+     */
+	private Double finalScore;
+    /**
+     * 是否回答正确？
+     */
+	private Boolean finalTof;
+	/**
+	 * 记录判断题正确答案
+	 */
+	private Boolean key;
+	/**
+	 * 记录判断题答题答案
+	 */
+	private Boolean keyMark = Boolean.FALSE;
+	/**
+	 * 标识当前是答卷中的问题
+	 */
+	private Boolean isReply = Boolean.TRUE;
+	/**
+	 * 根据是否有  question 对象，判断是否答题
+	 */
+	private List<Answer> answers;
 }
