@@ -32,9 +32,15 @@ public class Task extends BaseBean {
 	@DBRef
 	private Paper paper;
 	private Double score;
-	private Integer limit; //当前用户已用时，单位秒
+	/**
+	 * 当前用户已用时，单位秒
+	 */
+	private Integer limit;
 	private Map<String, TaskQuestion> questions;
-	private Integer status = 0; //0-草稿状态 1-提交  
+	/**
+	 * 0-草稿状态 1-提交
+	 */
+	private Integer status = 0;
 	@Transient
 	List<Map.Entry<String, TaskQuestion>> questionList;
 }

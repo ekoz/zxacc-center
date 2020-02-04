@@ -5,11 +5,14 @@ package com.zhengxinacc.exam.task.web;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import com.zhengxinacc.system.user.domain.User;
 import org.apache.commons.lang3.time.DateFormatUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -49,7 +52,9 @@ public class TaskController extends BaseController {
 	@RequestMapping("/loadList")
 	public JSONObject loadList(HttpServletRequest request){
 		List<Paper> paperList = paperService.findByUser(getCurrentUser(request));
-		if (paperList==null) paperList = new ArrayList<Paper>();
+		if (paperList==null){
+		    paperList = new ArrayList<>();
+        }
 		
 		JSONObject result = new JSONObject();
 		result.put("code", 0);
@@ -63,7 +68,8 @@ public class TaskController extends BaseController {
 			paper.setQuestions(null);
 			JSONObject tmp = (JSONObject)JSONObject.toJSON(paper);
 			Task task = taskRepository.findByPaperAndCreateUser(paper, getUsername(request));
-			if (task!=null){ //判断用户是否考试完毕，只用到了 status 字段
+			if (task!=null){
+                // 判断用户是否考试完毕，只用到了 status 字段
 				task.setPaper(null);
 				task.setQuestionList(null);
 				task.setQuestions(null);
@@ -113,11 +119,30 @@ public class TaskController extends BaseController {
 	/**
 	 * 查阅试卷，只读
 	 * @author eko.zhan at 2018年1月6日 下午2:36:30
-	 * @param taskId
+	 * @param param
 	 */
-	@RequestMapping("loadTask")
-	public Task loadTask(@RequestBody JSONObject param){
+	@RequestMapping("/loadTask")
+	public Task loadTask(HttpServletRequest request, @RequestBody JSONObject param){
 		Task task = taskRepository.findOne(param.getString("taskId"));
-		return taskService.setQuestionList(task);
+
+		// 如果是理工的学生，等到试卷停用后才能看到答案 task.getPaper().getDelFlag()==1
+        User user = getCurrentUser(request);
+        if (user.getUsername().length()==6 && user.getUsername().startsWith("1708") && task.getPaper().getDelFlag()==0){
+            // 学号 170802 是指理工的学生
+        }else{
+            task = taskService.setQuestionList(task);
+        }
+        return task;
 	}
+
+    /**
+     * 判断当前试卷是否完成
+     * @param taskId
+     * @return
+     */
+	@GetMapping("isFinish")
+    public JSONObject isFinish(String taskId){
+        Task task = taskRepository.findOne(taskId);
+        return writeSuccess(task==null?"0":task.getStatus().toString());
+    }
 }

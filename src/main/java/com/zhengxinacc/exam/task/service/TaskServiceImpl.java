@@ -145,8 +145,9 @@ public class TaskServiceImpl implements TaskService {
 		if (task.getStatus()==1){
 		    return task;
         }
-		
-		task.setStatus(1); //答卷完毕
+
+		//答卷完毕
+		task.setStatus(1);
 		task.setModifyDate(new Date());
 		//计算分数
 		List<Double> scoreList = new ArrayList<Double>();

@@ -33,14 +33,33 @@ public class Paper extends BaseBean {
 	@Id
 	private String id;
 	private String name;
-	private Integer limit; //试卷时长（分钟）
-	private Integer total; //试卷总分
+	/**
+	 * 试卷时长（分钟）
+	 */
+	private Integer limit;
+	/**
+	 * 试卷总分
+	 */
+	private Integer total;
+
+	/**
+	 * 考试发布的班级
+	 */
 	@DBRef
-	private List<Grade> grades; //考试发布的班级
-	//登录的学员只能查阅在考试有效时间内的试卷
-	private Date startDate; //考试有效时间-开始
-	private Date endDate; //考试有效时间-结束
-	private Map<String, PaperQuestion> questions; //{"score":"10","id":"5a4c6f378149763070f067cf","order":""},{"score":"10","id":"5a4c6f3e8149763070f067d0","order":""}
+	private List<Grade> grades;
+	/**
+	 * 登录的学员只能查阅在考试有效时间内的试卷
+	 * 考试有效时间-开始
+	 */
+	private Date startDate;
+	/**
+	 * 考试有效时间-结束
+	 */
+	private Date endDate;
+    /**
+     * {"score":"10","id":"5a4c6f378149763070f067cf","order":""},{"score":"10","id":"5a4c6f3e8149763070f067d0","order":""}
+     */
+	private Map<String, PaperQuestion> questions;
 	@Transient
 	List<Map.Entry<String, PaperQuestion>> questionList;
 	

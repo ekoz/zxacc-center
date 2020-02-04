@@ -119,9 +119,7 @@ public class ExecController extends BaseController {
 	/**
 	 * 单个答题保存，不计算分数，仅仅作为数据保存
 	 * @author eko.zhan at 2018年1月6日 上午10:28:52
-	 * @param paperId
-	 * @param quesId
-	 * @param ans
+	 * @param param
 	 * @param request
 	 * @return
 	 */
@@ -134,7 +132,7 @@ public class ExecController extends BaseController {
 	/**
 	 * 提交试卷，计算得分
 	 * @author eko.zhan at 2018年1月6日 下午2:34:00
-	 * @param id
+	 * @param param
 	 * @param request
 	 * @return
 	 */

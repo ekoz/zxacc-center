@@ -49,7 +49,7 @@ window.AppExec = {
 			/* 初始化倒计时 */
 			sandglass(response.data, function(){
 				$$('.zx-submit').click();
-			})
+			});
 			var paper = response.data.paper;
 			$$('.zx-paper-title').text(paper.name);
 			var questions = response.data.questionList;
@@ -129,14 +129,13 @@ window.AppExec = {
 				console.log(error);
 			});
 		});
-
 		//监听上一题
 		$$('.zx-prev').on('click', function(){
 			var curr = $$('.zx-cards').find('.color-red').index();
 			if (curr==0) return false;
 			curr--;
 			$$('.zx-cards').find('.zx-btn').eq(curr).click();
-		})
+		});
 		//监听下一题
 		$$('.zx-next').on('click', function(){
 			var len = $$('.zx-cards .zx-btn').length;
@@ -144,7 +143,7 @@ window.AppExec = {
 			curr++;
 			if (curr==len) return false;
 			$$('.zx-cards').find('.zx-btn').eq(curr).click();
-		})
+		});
 		//监听答案变化
 		$$('.zx-ans').on('click', '.item-content', function(){
 			var _this = this;
@@ -159,7 +158,7 @@ window.AppExec = {
 						quesId: quesId,
 						ans: ans.join(','),
 						limit: window.tmpLimit
-				}
+				};
 				app.request.postJSON(__ctx + '/exam/exec/save', param, function(data){
 					$$('.zx-cards').find('.color-red').addClass('color-black');
 				});
@@ -179,18 +178,28 @@ window.AppExec = {
 			app.dialog.confirm('确定提交吗', function(index){
 				var params = {
 						id: paperId
-				}
+				};
 				app.request.postJSON(__ctx + '/exam/exec/submit', params, function(data){
 					var taskId = data.id;
-					app.dialog.alert('提交成功', function(){
-						//location.href = __ctx + '/exam/task/read?taskId=' + taskId;
+					var score = data.score;
+					app.dialog.alert('提交成功，本次考试成绩为 ' + score + ' 分', function(){
+						// location.href = __ctx + '/exam/task/read?taskId=' + taskId;
 						location.reload();
+                        // app.router.navigate('/task/0/' + taskId + '/1/');
+                        // app.router.back(__ctx + '/#tab-task', {force: true, ignoreCache: true})
 					});
 				});
 			});
 		});
+		$$('.zx-read-btn').on('click', function(){
+		    // alert(11)
+            // app.router.navigate({name: 'task'})
+            // app.router.back('/#tab-task', {ignoreCache: true})
+            // app.router.back(__ctx + '/', {force: true})
+        })
+
 	},
 	pageAfterOut: function(event, page) {
 		window.clearInterval(window.__sandglass);
 	}
-}
+};

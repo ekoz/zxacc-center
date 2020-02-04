@@ -17,28 +17,29 @@ window.AppRead = {
 			$$('.zx-paper-title').text(task.paper.name);
 			$$('.zx-total').text(task.score);
 			var questions = task.questionList;
-			var i=0;
 			//渲染答题卡，注意： $$(questions).each(callback) 无法使用
-			for (var i=0;i<questions.length;i++){
-				var question = questions[i];
-				for (var key in question){
-					var item = task.questions[key];
-					var quesName = (i+1) + "、" + item.name;
-					if (item.type==0){
-						//单选题
-						var content = singleAnsCompile(item);
-						$$('#panel').append(faqCompile({id: item.id, quesName: quesName, score: item.score, content: content}));
-					}else if (item.type==1){
-						//多选题
-						var content = multiAnsCompile(item);
-						$$('#panel').append(faqCompile({quesName: quesName, score: item.score, content: content}));
-					}else if (item.type==2){
-						//判断题
-						var content = tofAnsCompile(item);
-						$$('#panel').append(faqCompile({quesName: quesName, score: item.score, content: content}));
-					}
-				}
-			}
+			if (questions!=null){
+                for (var i=0;i<questions.length;i++){
+                    var question = questions[i];
+                    for (var key in question){
+                        var item = task.questions[key];
+                        var quesName = (i+1) + "、" + item.name;
+                        if (item.type==0){
+                            //单选题
+                            var content = singleAnsCompile(item);
+                            $$('#panel').append(faqCompile({id: item.id, quesName: quesName, score: item.score, content: content}));
+                        }else if (item.type==1){
+                            //多选题
+                            var content = multiAnsCompile(item);
+                            $$('#panel').append(faqCompile({quesName: quesName, score: item.score, content: content}));
+                        }else if (item.type==2){
+                            //判断题
+                            var content = tofAnsCompile(item);
+                            $$('#panel').append(faqCompile({quesName: quesName, score: item.score, content: content}));
+                        }
+                    }
+                }
+            }
 		})
 		.catch(function (error) {
 			console.log(error);
@@ -47,4 +48,4 @@ window.AppRead = {
 	pageAfterOut: function(event, page) {
 		
 	}
-}
+};
