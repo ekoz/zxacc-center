@@ -63,4 +63,11 @@ public interface PaperService {
 	 * @param paperId
 	 */
     XSSFWorkbook exportTask(String paperId);
+
+    /**
+     * 判断试卷是否结束
+     * @param paper
+     * @return
+     */
+    Boolean isFinished(Paper paper);
 }

@@ -55,6 +55,22 @@
 				</div>
 				<div class="layui-form-item">
 					<div class="layui-inline">
+						<label class="layui-form-label">显示答案</label>
+						<div class="layui-input-inline">
+                            <input type="radio" name="displayTofAtReply" value="1" title="是" checked="checked">
+                            <input type="radio" name="displayTofAtReply" value="0" title="否">
+						</div>
+					</div>
+					<div class="layui-inline">
+                        <span class="layui-badge-rmi layui-bg-orange">
+                            考试结束后是否立即显示正确答案，如果勾选是，<br/>
+                            可能导致某个学生考完后将正确答案发给其他学生。<br/>
+                            勾选否，那么在所有学生考试完毕后会自动显示答案。
+                        </span>
+					</div>
+				</div>
+				<div class="layui-form-item">
+					<div class="layui-inline">
 						<label class="layui-form-label">请选择班级</label>
 						<div class="layui-input-inline">
 							<button id="btnPick" class="layui-btn layui-btn-normal layui-btn-sm">请选择</button>

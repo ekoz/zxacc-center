@@ -50,10 +50,11 @@ layui.use(['table'], function(){
 $('#btnAdd, #btnEdit').click(function(){
 	init();
 	var _this = this;
-	layui.use(['layer', 'table', 'laydate'], function(){
+	layui.use(['layer', 'table', 'laydate', 'form'], function(){
 		var layer = layui.layer;
 		var table = layui.table;
 		var laydate = layui.laydate;
+        var form = layui.form;
 		
 		if (_this.id=='btnEdit'){
 			//编辑
@@ -67,7 +68,11 @@ $('#btnAdd, #btnEdit').click(function(){
 				$('input[name="name"]').val(row.name);
 				$('input[name="limit"]').val(row.limit);
 				$('input[name="total"]').val(row.total);
-				//渲染班级
+				// 渲染是否立即显示答案
+                console.log(row.displayTofAtReply);
+                $('input[name="displayTofAtReply"][value="' + row.displayTofAtReply + '"]').attr('checked', 'checked');
+
+                //渲染班级
 				if (row.grades!=null && row.grades.length>0){
 					$(row.grades).each(function(i, item){
 						if (item){
@@ -108,6 +113,8 @@ $('#btnAdd, #btnEdit').click(function(){
 				}else{
 					laydate.render({elem: '#endDate', value: dateFns.format(date, 'YYYY-MM-DD')});
 				}
+
+				form.render();
 			}else{
 				return false;
 			}
@@ -174,8 +181,9 @@ $('#btnAdd, #btnEdit').click(function(){
 					startDate: $('input[name="startDate"]').val(),
 					endDate: $('input[name="endDate"]').val(),
 					gradeIds: gradeIds,
-					questions: JSON.stringify(_arr)
-				}
+					questions: JSON.stringify(_arr),
+                    displayTofAtReply: $('input[name="displayTofAtReply"]:checked').val()
+				};
 								
 				$.post($.kbase.ctx + '/exam/paper/save', param, function(data){
 					if (data.success){

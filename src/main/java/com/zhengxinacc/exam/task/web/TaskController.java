@@ -124,12 +124,15 @@ public class TaskController extends BaseController {
 	@RequestMapping("/loadTask")
 	public Task loadTask(HttpServletRequest request, @RequestBody JSONObject param){
 		Task task = taskRepository.findOne(param.getString("taskId"));
+		Paper paper = task.getPaper();
 
 		// 如果是理工的学生，等到试卷停用后才能看到答案 task.getPaper().getDelFlag()==1
         User user = getCurrentUser(request);
-        if (user.getUsername().length()==6 && user.getUsername().startsWith("1708") && task.getPaper().getDelFlag()==0){
+        /*if (user.getUsername().length()==6 && user.getUsername().startsWith("1708") && paper.getDelFlag()==0){
             // 学号 170802 是指理工的学生
-        }else{
+        }else */if (paper.getDisplayTofAtReply()==0 && !paperService.isFinished(paper)){
+			// 试卷设置考试结束后不立即显示答案，且试卷未结束
+		}else{
             task = taskService.setQuestionList(task);
         }
         return task;

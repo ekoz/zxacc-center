@@ -7,9 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -27,6 +25,9 @@ import com.zhengxinacc.exam.grade.domain.Grade;
 @Document(collection="exam_paper")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class Paper extends BaseBean {
 
@@ -62,5 +63,10 @@ public class Paper extends BaseBean {
 	private Map<String, PaperQuestion> questions;
 	@Transient
 	List<Map.Entry<String, PaperQuestion>> questionList;
+    /**
+     * 考试结束后是否立即显示答案，选择0，那么会在所有考试结束后才显示答案
+     * 0-不显示；1-立即显示
+     */
+	private Integer displayTofAtReply;
 	
 }

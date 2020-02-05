@@ -128,8 +128,10 @@ public class PaperController extends BaseController {
 		String name = request.getParameter("name");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		String[] gradeIds = request.getParameterValues("gradeIds[]"); //班级id数组
-		String questions = request.getParameter("questions"); //json数组字符串
+		// 班级id数组
+		String[] gradeIds = request.getParameterValues("gradeIds[]");
+        // json数组字符串
+		String questions = request.getParameter("questions");
 		
 		JSONObject param = new JSONObject();
 		param.put("id", id);
@@ -141,6 +143,7 @@ public class PaperController extends BaseController {
 		param.put("gradeIds", JSON.toJSONString(gradeIds));
 		param.put("username", getUsername(request));
 		param.put("questions", questions);
+		param.put("displayTofAtReply", request.getParameter("displayTofAtReply"));
 		paperService.save(param);
 		return writeSuccess();
 	}

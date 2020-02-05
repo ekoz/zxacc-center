@@ -123,6 +123,7 @@ public class PaperServiceImpl implements PaperService {
 			map.put(json.getString("id"), question);
 		}
 		paper.setQuestions(map);
+		paper.setDisplayTofAtReply(data.getInteger("displayTofAtReply")==null?1:data.getInteger("displayTofAtReply"));
 
 		return paperRepository.save(paper);
 	}
@@ -308,6 +309,27 @@ public class PaperServiceImpl implements PaperService {
 
         return workbook;
 	}
+
+    @Override
+    public Boolean isFinished(Paper paper) {
+	    // 如果试卷停用，那么试卷就肯定结束
+        if (paper.getDelFlag()==1){
+            return Boolean.TRUE;
+        }
+
+        // 待考试人数===考试结束人数
+        List<Task> list = taskRepository.findByPaper(paper);
+        // 所有待考试人员
+        int allUserCount  = 0;
+        for (Grade grade : paper.getGrades()){
+            allUserCount += grade.getUsers().size();
+        }
+        long taskUserCount = list.stream().filter(task -> task.getStatus()==1).count();
+        if (allUserCount==taskUserCount){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
+    }
 
     /**
      * 错题集合
