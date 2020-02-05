@@ -10,8 +10,10 @@ window.AppRead = {
 		
 		//考试页面加载完毕后，对页面数据进行初始化 
 		//axios 第二个参数有坑，用的时候当心哦，技术尝试 application/x-www-form-urlencoded 与 application/json 的区别
+        app.preloader.show();
 		axios.post(__ctx + '/exam/task/loadTask', {taskId: taskId})
 		.then(function (response) {
+            app.preloader.hide();
 			console.log(response.data);
 			var task = response.data;
 			$$('.zx-paper-title').text(task.paper.name);
