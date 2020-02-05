@@ -130,7 +130,7 @@ public class TaskController extends BaseController {
         User user = getCurrentUser(request);
         /*if (user.getUsername().length()==6 && user.getUsername().startsWith("1708") && paper.getDelFlag()==0){
             // 学号 170802 是指理工的学生
-        }else */if (paper.getDisplayTofAtReply()==0 && !paperService.isFinished(paper)){
+        }else */if (paper.getDisplayTofAtReply()!=null && paper.getDisplayTofAtReply()==0 && !paperService.isFinished(paper)){
 			// 试卷设置考试结束后不立即显示答案，且试卷未结束
 		}else{
             task = taskService.setQuestionList(task);
