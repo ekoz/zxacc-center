@@ -36,7 +36,7 @@ public class TaskQuestion {
     /**
      * 是否回答正确？
      */
-	private Boolean finalTof;
+	private Boolean finalTof = Boolean.FALSE;
 	/**
 	 * 记录判断题正确答案
 	 */

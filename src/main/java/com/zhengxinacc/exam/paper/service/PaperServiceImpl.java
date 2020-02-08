@@ -244,10 +244,14 @@ public class PaperServiceImpl implements PaperService {
                     Iterator<Answer> iterator = taskQuestion.getAnswers().iterator();
                     while (iterator.hasNext()){
                         Answer answer = iterator.next();
-                        if (answer.getKey() && answer.getKey().equals(answer.getMark())){
+//                        if (answer.getKey() && answer.getKey().equals(answer.getMark())){
+//                            b = false;
+//                        }else if (!answer.getKey() && answer.getKey().equals(answer.getMark())){
+//                            b = false;
+//                        }
+                        if (!answer.getKey().equals(answer.getMark())){
                             b = false;
-                        }else if (!answer.getKey() && answer.getKey().equals(answer.getMark())){
-                            b = false;
+                            break;
                         }
                     }
                     if (!b){

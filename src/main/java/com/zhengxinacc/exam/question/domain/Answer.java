@@ -27,11 +27,17 @@ public class Answer {
 	private String id;
 	private String name;
 	private String value;
-	//@JSONField(serialize=false) //答案不应该抛到前端
-	private Boolean key = Boolean.FALSE; //true-正确答案 false-错误答案 答案默认都是错误
+    /**
+     * true-正确答案 false-错误答案 答案默认都是错误
+     * // @JSONField(serialize=false) 答案不应该抛到前端
+     */
+	private Boolean key = Boolean.FALSE;
 	@JsonIgnore
 	@JSONField(serialize=false)
 	@DBRef
 	private Question question;
-	private Boolean mark = Boolean.FALSE; //用户答题时是否选择该值，如果选择则为true
+    /**
+     * 用户答题时是否选择该值，如果选择则为true
+     */
+	private Boolean mark = Boolean.FALSE;
 }

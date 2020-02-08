@@ -26,6 +26,9 @@ window.AppRead = {
                     for (var key in question){
                         var item = task.questions[key];
                         var quesName = (i+1) + "、" + item.name;
+                        if (item.finalTof==null || item.finalTof==false){
+                            quesName = '<span class="badge color-red">' + quesName + '</span>';
+                        }
                         if (item.type==0){
                             //单选题
                             var content = singleAnsCompile(item);

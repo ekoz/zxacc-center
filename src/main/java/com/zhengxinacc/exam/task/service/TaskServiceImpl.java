@@ -168,11 +168,17 @@ public class TaskServiceImpl implements TaskService {
 				Iterator<Answer> iterator = taskQuestion.getAnswers().iterator();
 				while (iterator.hasNext()){
 					Answer answer = iterator.next();
-					if (answer.getKey() && answer.getKey().equals(answer.getMark())){
-						b = false;
-					}else if (!answer.getKey() && answer.getKey().equals(answer.getMark())){
-						b = false;
-					}
+//					if (answer.getKey() && !answer.getKey().equals(answer.getMark())){
+//						// 如果当前答案是正确答案，而且用户未勾选，那么返回false?
+//						b = false;
+//					}else if (!answer.getKey() && !answer.getKey().equals(answer.getMark())){
+//					    // 如果当前答案是错误答案，且用户勾选，那么返回false
+//						b = false;
+//					}
+					if (!answer.getKey().equals(answer.getMark())){
+					    b = false;
+					    break;
+                    }
 				}
 				if (b){
 					scoreList.add(taskQuestion.getScore());
