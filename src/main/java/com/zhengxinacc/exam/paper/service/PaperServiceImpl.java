@@ -3,6 +3,8 @@
  */
 package com.zhengxinacc.exam.paper.service;
 
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -13,13 +15,19 @@ import com.zhengxinacc.exam.question.domain.Answer;
 import com.zhengxinacc.exam.task.domain.Task;
 import com.zhengxinacc.exam.task.domain.TaskQuestionVO;
 import com.zhengxinacc.exam.task.repository.TaskRepository;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.Charsets;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +52,7 @@ import com.zhengxinacc.exam.question.domain.Question;
 import com.zhengxinacc.exam.question.repository.QuestionRepository;
 import com.zhengxinacc.exam.task.domain.TaskQuestion;
 import com.zhengxinacc.system.user.domain.User;
+import org.springframework.util.ResourceUtils;
 
 /**
  * @author <a href="mailto:eko.z@outlook.com">eko.zhan</a>
@@ -51,6 +60,7 @@ import com.zhengxinacc.system.user.domain.User;
  * @version 1.0
  */
 @Service
+@Slf4j
 public class PaperServiceImpl implements PaperService {
 
 	@Resource
@@ -143,22 +153,40 @@ public class PaperServiceImpl implements PaperService {
 
 	@Override
 	public Paper setQuestionList(Paper paper) {
-		Map<String, PaperQuestion> questions = paper.getQuestions();
-		List<Map.Entry<String, PaperQuestion>> list = new ArrayList<Map.Entry<String, PaperQuestion>>(questions.entrySet());
-		Collections.sort(list, new Comparator<Map.Entry<String, PaperQuestion>>() {
-			@Override
-			public int compare(Map.Entry<String, PaperQuestion> o1, Map.Entry<String, PaperQuestion> o2) {
-				PaperQuestion q1 = o1.getValue();
-				PaperQuestion q2 = o2.getValue();
-				if (q1.getOrder()!=null && q2.getOrder()!=null){
-					return q1.getOrder().compareTo(q2.getOrder());
-				}
-				return 0;
-			}
-		});
-		paper.setQuestionList(list);
-		return paper;
+		return setQuestionList(paper, false);
 	}
+
+    /**
+     *
+     * @param paper
+     * @param enableAnswer 是否导出答案
+     * @return
+     */
+	private Paper setQuestionList(Paper paper, Boolean enableAnswer){
+        Map<String, PaperQuestion> questions = paper.getQuestions();
+        List<Map.Entry<String, PaperQuestion>> list = new ArrayList<Map.Entry<String, PaperQuestion>>(questions.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, PaperQuestion>>() {
+            @Override
+            public int compare(Map.Entry<String, PaperQuestion> o1, Map.Entry<String, PaperQuestion> o2) {
+                PaperQuestion q1 = o1.getValue();
+                PaperQuestion q2 = o2.getValue();
+                if (q1.getOrder()!=null && q2.getOrder()!=null){
+                    return q1.getOrder().compareTo(q2.getOrder());
+                }
+                return 0;
+            }
+        });
+        if (enableAnswer){
+            list = list.stream()
+                    .peek(entity -> {
+                        Question ques = questionRepository.findOne(entity.getKey());
+                        entity.getValue().setAnswers(ques.getAnswers());
+                    })
+                    .collect(Collectors.toList());
+        }
+        paper.setQuestionList(list);
+        return paper;
+    }
 
 	@Override
 	public Page<Paper> findAll(Integer page, Integer size, JSONObject data, Direction desc) {
@@ -333,6 +361,28 @@ public class PaperServiceImpl implements PaperService {
             return Boolean.TRUE;
         }
         return Boolean.FALSE;
+    }
+
+    @Override
+    public String printWord(Paper paper) throws IOException, TemplateException {
+	    String filePath = System.getProperty("java.io.tmpdir");
+	    filePath = filePath + "/" + System.currentTimeMillis() + ".doc";
+        log.debug("文件路径：" + filePath);
+	    paper = setQuestionList(paper, true);
+        Configuration configuration = new Configuration(Configuration.getVersion());
+        //设置编码
+        configuration.setDefaultEncoding(Charsets.UTF_8.name());
+        //ftl模板文件统一放至 resources/ftl 包下面
+        configuration.setClassForTemplateLoading(PaperService.class, "/");
+//        configuration.setDirectoryForTemplateLoading(ResourceUtils.getFile("classpath:application.properties").getParentFile());
+        //获取模板 
+        Template template = configuration.getTemplate("ftl/paper.ftl", Locale.getDefault(), Charsets.UTF_8.name());
+        //将模板和数据模型合并生成文件
+        //生成 word
+        Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filePath), Charsets.UTF_8));
+        template.process(paper, out);
+        out.close();
+        return filePath;
     }
 
     /**

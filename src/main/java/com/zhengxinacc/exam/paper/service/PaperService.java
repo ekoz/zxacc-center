@@ -3,8 +3,10 @@
  */
 package com.zhengxinacc.exam.paper.service;
 
+import java.io.IOException;
 import java.util.List;
 
+import freemarker.template.TemplateException;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
@@ -70,4 +72,13 @@ public interface PaperService {
      * @return
      */
     Boolean isFinished(Paper paper);
+
+    /**
+     * 试卷导出word
+     * @param paper
+     * @return
+     * @throws IOException
+     * @throws TemplateException
+     */
+    String printWord(Paper paper) throws IOException, TemplateException;
 }

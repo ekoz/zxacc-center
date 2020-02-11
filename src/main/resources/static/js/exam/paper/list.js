@@ -280,6 +280,18 @@ $('#btnCopy').click(function(){
 	});
 	
 });
+// 导出试卷 btnPrint
+$('#btnPrint').click(function(){
+    layui.use(['layer', 'table'], function(){
+        var layer = layui.layer;
+        var table = layui.table;
+        var checked = table.checkStatus('grid');
+        if (checked.data.length>0){
+            var row = checked.data[0];
+            window.open($.kbase.ctx + '/exam/paper/printWord?paperId=' + row.id);
+        }
+    });
+});
 //查询
 $('#btnQuery').click(function(){
 	var keyword = $('#keyword').val();

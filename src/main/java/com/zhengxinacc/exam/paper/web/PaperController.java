@@ -3,16 +3,18 @@
  */
 package com.zhengxinacc.exam.paper.web;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import freemarker.template.TemplateException;
+import org.apache.commons.io.Charsets;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort.Direction;
@@ -234,6 +236,22 @@ public class PaperController extends BaseController {
         }
         return responseEntity;
     }
+
+	/**
+	 * 打印试卷
+	 * @param paperId
+	 */
+	@GetMapping(value = "/printWord", produces = "application/msword;charset=UTF-8")
+	public ResponseEntity<byte[]> printWord(String paperId) throws IOException, TemplateException {
+        Paper paper = paperRepository.findOne(paperId);
+        String filePath = paperService.printWord(paper);
+        File file = new File(filePath);
+        HttpHeaders headers = new HttpHeaders();
+		headers.setContentDispositionFormData("attachment", URLEncoder.encode(paper.getName(), Charsets.UTF_8.name()) + "_" + file.getName());
+		headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+		byte[] outputStreamByte = IOUtils.toByteArray(new FileInputStream(file));
+		return new ResponseEntity<>(outputStreamByte, headers, HttpStatus.OK);
+	}
 	
 	@RequestMapping("/copy")
 	public JSONObject copy(String id){
