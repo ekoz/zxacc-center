@@ -37,7 +37,7 @@ public class PaperServiceTests {
     @Test
     public void print() throws IOException, TemplateException {
         Paper paper = paperRepository.findOne("5e3e56bfce0fbf1af4a67f0a");
-        System.out.println(paperService.printWord(paper));
+        System.out.println(paperService.printWord(paper, 1));
     }
 
 }

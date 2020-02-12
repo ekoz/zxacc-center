@@ -75,6 +75,19 @@ public class PaperServiceImpl implements PaperService {
 	private MongoTemplate mongoTemplate;
 	@Resource
     private TaskRepository taskRepository;
+
+    /**
+     * 导出试卷中的正确答案
+     */
+	private static final Map<Integer, String> SELECTOR = new HashMap<>();
+	static {
+	    SELECTOR.put(0, "A");
+        SELECTOR.put(1, "B");
+        SELECTOR.put(2, "C");
+        SELECTOR.put(3, "D");
+        SELECTOR.put(4, "E");
+        SELECTOR.put(5, "F");
+    }
 	
 	@Override
 	public Paper save(JSONObject data) {
@@ -163,6 +176,17 @@ public class PaperServiceImpl implements PaperService {
      * @return
      */
 	private Paper setQuestionList(Paper paper, Boolean enableAnswer){
+        return setQuestionList(paper, enableAnswer, Boolean.FALSE);
+    }
+
+    /**
+     *
+     * @param paper
+     * @param enableAnswer 是否导出答案
+     * @param enableFinalTof 是否导出标准答案
+     * @return
+     */
+    private Paper setQuestionList(Paper paper, Boolean enableAnswer, Boolean enableFinalTof){
         Map<String, PaperQuestion> questions = paper.getQuestions();
         List<Map.Entry<String, PaperQuestion>> list = new ArrayList<Map.Entry<String, PaperQuestion>>(questions.entrySet());
         Collections.sort(list, new Comparator<Map.Entry<String, PaperQuestion>>() {
@@ -181,6 +205,34 @@ public class PaperServiceImpl implements PaperService {
                     .peek(entity -> {
                         Question ques = questionRepository.findOne(entity.getKey());
                         entity.getValue().setAnswers(ques.getAnswers());
+
+                        // 输出正确答案
+                        if (enableFinalTof){
+                            if (ques.getType()==0){
+                                //单选题
+                                for (int i=0;i<ques.getAnswers().size();i++){
+                                    if (ques.getAnswers().get(i).getKey()){
+                                        entity.getValue().setFinalTof(SELECTOR.get(i));
+                                        break;
+                                    }
+                                }
+                            }else if (ques.getType()==1){
+                                //多选题
+                                StringBuffer sb = new StringBuffer();
+                                for (int i=0;i<ques.getAnswers().size();i++){
+                                    if (ques.getAnswers().get(i).getKey()){
+                                        sb.append(SELECTOR.get(i));
+                                    }
+                                }
+                                entity.getValue().setFinalTof(sb.toString());
+                            }else if (ques.getType()==2){
+                                if (ques.getKey()){
+                                    entity.getValue().setFinalTof("√");
+                                }else{
+                                    entity.getValue().setFinalTof("×");
+                                }
+                            }
+                        }
                     })
                     .collect(Collectors.toList());
         }
@@ -364,11 +416,12 @@ public class PaperServiceImpl implements PaperService {
     }
 
     @Override
-    public String printWord(Paper paper) throws IOException, TemplateException {
+    public String printWord(Paper paper, Integer type) throws IOException, TemplateException {
+	    // type==1 包含答案； 0==不包含答案
 	    String filePath = System.getProperty("java.io.tmpdir");
 	    filePath = filePath + "/" + System.currentTimeMillis() + ".doc";
         log.debug("文件路径：" + filePath);
-	    paper = setQuestionList(paper, true);
+	    paper = setQuestionList(paper, true, type==1);
         Configuration configuration = new Configuration(Configuration.getVersion());
         //设置编码
         configuration.setDefaultEncoding(Charsets.UTF_8.name());

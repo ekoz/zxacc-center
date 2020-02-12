@@ -288,7 +288,16 @@ $('#btnPrint').click(function(){
         var checked = table.checkStatus('grid');
         if (checked.data.length>0){
             var row = checked.data[0];
-            window.open($.kbase.ctx + '/exam/paper/printWord?paperId=' + row.id);
+
+            layer.confirm('试卷导出是否包含答案？', function(index){
+                window.open($.kbase.ctx + '/exam/paper/printWord?type=1&paperId=' + row.id);
+                layer.close(index);
+            }, function (index) {
+                window.open($.kbase.ctx + '/exam/paper/printWord?type=0&paperId=' + row.id);
+                layer.close(index);
+            });
+
+
         }
     });
 });

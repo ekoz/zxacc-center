@@ -36,4 +36,13 @@ public class PaperQuestion {
     @JsonIgnore
     @JSONField(serialize=false)
     private List<Answer> answers;
+    /**
+     * 打印试卷时需要带上正确答案
+     * 判断题时记录正确答案
+     * true-正确 false-错误
+     */
+    @Setter
+    @JsonIgnore
+    @JSONField(serialize=false)
+    private String finalTof = "";
 }

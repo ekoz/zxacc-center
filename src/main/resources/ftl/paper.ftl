@@ -2,7 +2,7 @@ ${name}
 
 <#list questionList as map>
 
-${map_index+1}、${map.value.name} (${map.value.score} 分)
+${map_index+1}、${map.value.name} (${map.value.score} 分)（${map.value.finalTof}）
     <#if map.value.type==2>
 A. 正确（ ）                                     B. 错误（ ）
     <#else>

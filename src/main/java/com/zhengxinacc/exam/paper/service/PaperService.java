@@ -80,5 +80,5 @@ public interface PaperService {
      * @throws IOException
      * @throws TemplateException
      */
-    String printWord(Paper paper) throws IOException, TemplateException;
+    String printWord(Paper paper, Integer type) throws IOException, TemplateException;
 }

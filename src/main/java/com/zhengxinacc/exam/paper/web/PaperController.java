@@ -242,9 +242,9 @@ public class PaperController extends BaseController {
 	 * @param paperId
 	 */
 	@GetMapping(value = "/printWord", produces = "application/msword;charset=UTF-8")
-	public ResponseEntity<byte[]> printWord(String paperId) throws IOException, TemplateException {
+	public ResponseEntity<byte[]> printWord(Integer type, String paperId) throws IOException, TemplateException {
         Paper paper = paperRepository.findOne(paperId);
-        String filePath = paperService.printWord(paper);
+        String filePath = paperService.printWord(paper, type);
         File file = new File(filePath);
         HttpHeaders headers = new HttpHeaders();
 		headers.setContentDispositionFormData("attachment", URLEncoder.encode(paper.getName(), Charsets.UTF_8.name()) + "_" + file.getName());
