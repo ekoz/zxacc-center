@@ -8,6 +8,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.ToString;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,6 +23,7 @@ import com.zhengxinacc.config.BaseBean;
 @Document(collection="exam_question_cate")
 @Getter
 @Setter
+@ToString
 public class QuestionCate extends BaseBean {
 
 	@Id

@@ -5,8 +5,7 @@ package com.zhengxinacc.exam.question.domain;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -24,6 +23,10 @@ import com.zhengxinacc.config.BaseBean;
 @Document(collection="exam_question")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Question extends BaseBean {
 
 	@Id

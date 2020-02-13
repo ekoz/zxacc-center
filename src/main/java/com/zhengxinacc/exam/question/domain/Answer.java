@@ -3,8 +3,7 @@
  */
 package com.zhengxinacc.exam.question.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
@@ -21,11 +20,21 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @Document(collection="exam_answer")
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@ToString
 public class Answer {
 
 	@Id
 	private String id;
+    /**
+     * 答案描述
+     */
 	private String name;
+    /**
+     * 暂无实际用途
+     */
 	private String value;
     /**
      * true-正确答案 false-错误答案 答案默认都是错误
