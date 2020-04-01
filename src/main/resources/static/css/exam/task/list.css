@@ -86,3 +86,6 @@
 	overflow-x: hidden;
 	height: 100%;
 }
+.kbs-title-row{
+    display: contents;
+}
