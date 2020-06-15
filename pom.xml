@@ -14,7 +14,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.5.12.RELEASE</version>
+		<version>1.5.21.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -25,6 +25,7 @@
 		<thymeleaf.version>3.0.9.RELEASE</thymeleaf.version>
         <freemarker.version>2.3.28</freemarker.version>
 		<thymeleaf-layout-dialect.version>2.3.0</thymeleaf-layout-dialect.version>
+		<skipTests>true</skipTests>
 	</properties>
 
 	<dependencies>
@@ -80,12 +81,17 @@
 		    <groupId>commons-codec</groupId>
 		    <artifactId>commons-codec</artifactId>
 		</dependency>
-		<dependency>
-		    <groupId>com.eastrobot</groupId>
-		    <artifactId>kbase-logger</artifactId>
-		    <version>0.0.1</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
+		<!--<dependency>-->
+		    <!--<groupId>com.eastrobot</groupId>-->
+		    <!--<artifactId>kbase-logger</artifactId>-->
+		    <!--<version>0.0.1</version>-->
+		<!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.poi/poi -->
 		<dependency>
 		    <groupId>org.apache.poi</groupId>
 		    <artifactId>poi</artifactId>

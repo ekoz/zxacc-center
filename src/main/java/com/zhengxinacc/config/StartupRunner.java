@@ -13,7 +13,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.eastrobot.log.annotation.Interval;
 import com.zhengxinacc.exam.paper.domain.Paper;
 import com.zhengxinacc.exam.paper.repository.PaperRepository;
 import com.zhengxinacc.exam.question.domain.QuestionCate;
@@ -23,6 +22,7 @@ import com.zhengxinacc.system.permission.repository.PermissionRepository;
 import com.zhengxinacc.system.role.domain.Role;
 import com.zhengxinacc.system.role.repository.RoleRepository;
 import com.zhengxinacc.util.SystemKeys;
+import org.springframework.util.StopWatch;
 
 /**
  * <pre class="code">
@@ -63,10 +63,11 @@ public class StartupRunner implements CommandLineRunner {
 	}
 	
 	@Override
-	@Interval
 	public void run(String... arg0) throws Exception {
 		//初始化数据
 		//题目分类为空时，创建相应的题目分类
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
 		List<QuestionCate> list = questionCateRepository.findAll();
 		if (list.size()==0){
 			QuestionCate questionCate = saveQuestionCate("初级会计实务", "ROOT");
@@ -93,6 +94,8 @@ public class StartupRunner implements CommandLineRunner {
 			saveRole("系统管理员", "SYS_ADMIN");
 			saveRole("考试管理员", "SYS_EXAM");
 		}
+		stopWatch.stop();
+        System.out.println(stopWatch);
 	}
 	
 	private void saveRole(String name, String key) {

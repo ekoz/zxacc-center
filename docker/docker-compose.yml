@@ -1,0 +1,38 @@
+version: '3.1'
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:3.6.9
+    volumes:
+      - /opt/containers/zxacc/mongo:/data
+      - ./mongod.conf:/etc/mongod.conf
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    env_file: .env
+    environment:
+      # 注意，密码里有 $ 符号，导致启动会报错，采用 .env 的方式加载配置参数
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - TZ=Asia/Shanghai
+    ports:
+    - "27027:27017"
+    restart: always
+    networks:
+    - zx_net
+    # 不要画蛇添足，会导致 environment 参数不生效，可能原因是影响到 docker-entrypoint.sh 执行，所有配置放在 /etc/mongod.conf 里
+#    entrypoint: ["mongod", "--config", "/etc/mongod.conf", "--bind_ip", "0.0.0.0", "--auth"]
+  zxacc-center:
+    container_name: zxacc-center
+    build: .
+    ports:
+      - '8088:8088'
+    volumes:
+      - './log:/app/log'
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - mongodb
+    restart: always
+    networks:
+      - zx_net
+networks:
+  zx_net:
