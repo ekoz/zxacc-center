@@ -15,7 +15,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - TZ=Asia/Shanghai
     ports:
-    - "27027:27017"
+    - "27017:27017"
     restart: always
     networks:
     - zx_net

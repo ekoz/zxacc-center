@@ -11,4 +11,4 @@ COPY application.properties /app/config/
 
 RUN echo "Asia/Shanghai" > /etc/timezone
 
-ENTRYPOINT ["java", "-Xmx512M", "-jar", "/app/app.jar", "--spring.config.location=file:/app/config/application.properties"]
+ENTRYPOINT ["java", "-Xmx512M", "-jar", "/app/app.jar", "--spring.profiles.active=prod", "--spring.config.location=file:/app/config/application.properties"]
